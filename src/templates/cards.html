@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7928606644657999" crossorigin="anonymous"></script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>medschoolGPT</title>
+		<style>
+			body {
+				background-color: #C0D6E4;
+			}
+			.container {
+				display: flex;
+			  	flex-direction: column;
+			  	align-items: center;
+			  	margin-top: 5%;
+			}
+			.title {
+			 	font-size: 3rem;
+			  	font-family: 'Open Sans', sans-serif;
+			  	color: #1e90ff;
+			  	margin-bottom: 1rem;
+			}
+			.subtitle {
+			  	font-size: 1.5rem;
+			  	font-family: 'Open Sans', sans-serif;
+			  	color: #333;
+			  	margin-bottom: 2rem;
+			}
+			.form-control {
+			  	background-color: #fff;
+			  	border-radius: 10px;
+			  	padding: 0.5rem 1rem;
+			  	font-size: 1.5rem;
+			  	margin-bottom: 1rem;
+			}
+			.btn {
+				background-color: #1e90ff;
+				color: #fff;
+				font-size: 1.5rem;
+				padding: 0.5rem 2rem;
+				border-radius: 10px;
+				margin-top: 2rem;
+				margin-bottom: 40px;
+				box-shadow: none;
+				border: none;
+				font-family: 'Open Sans', sans-serif;
+				text-decoration: none;
+				width: 120px;
+				text-align: center;
+			}
+			.btn:hover {
+			  	background-color: #00bfff;
+			}
+			.card-text {
+				font-size: 1.4rem;
+				font-family: 'Open Sans', sans-serif;
+			}
+			.card-text kbd {
+				padding: 0.2rem 0.4rem;
+				font-size: 1.4rem;
+				font-weight: 700;
+				color: #fff;
+				background-color: #212529;
+				border-radius: 0.2rem;
+			}
+			.non-med-text {
+				font-size: 1.2rem;
+				font-family: 'Open Sans', sans-serif;
+			}
+			.non-med-text kbd {
+				padding: 0.2rem 0.4rem;
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: #fff;
+				background-color: #212529;
+				border-radius: 0.2rem;
+			}
+			.form-group {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			table {
+				margin-top: 20px;
+				margin-bottom: 40px;
+				font-family: 'Open Sans', sans-serif;
+				border-spacing: 8px;
+				max-width: 60vw;
+				font-size: 1.2rem;
+			}
+			.custom-checkbox {
+				width: 30px;
+				height: 30px;
+			}
+			.center-align-td {
+				text-align: center;
+			}
+			.parent-of-table {
+				padding-bottom: 40px;
+			}
+			.parent-of-buttons {
+				display: flex;
+				justify-content: center;
+			}
+			.go-back-button {
+				margin-left: 10px;
+			}
+			.download-button {
+				margin-right: 10px;
+			}
+			.download-button[disabled] {
+				pointer-events: none;
+				opacity: 0.2;
+				background-color: #071240;
+			}
+		</style>
+	</head>
+	<body style="min-height: calc(100vh + 40px)">
+		<div class="container">
+			<h1 class="title">medschoolGPT</h1>
+			<h2 class="subtitle">AI-generated Anki cards for medical students</h2>
+			<div class="card-text">
+				Created {{ num_cards }} cards related to <kbd>{{ topic }}</kbd> ...
+			</div>
+			<div class="parent-of-table">
+				{% if all_cards|length > 1 %}
+					<table class="table table-bordered">
+						<thead class="thead-light">
+								<th>Card content</th>
+								<th>Keep?</th>
+						</thead>
+						<tbody>
+							{% for card in all_cards %}
+								<tr>
+									<td>{{ card }}</td>
+									<td class="center-align-td"><input type="checkbox" class="custom-checkbox" value="{{ card }}" checked></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+				    <div class="non-med-text">
+				        <br><i>medschoolGPT is not very familiar with <kbd>{{ topic }}</kbd> (yet)</i>
+				    </div>
+				{% endif %}
+				<div class="parent-of-buttons">
+					{% if all_cards|length == 1 %}
+						<a href="#" class="btn download-button" disabled>Download</a>
+					{% else %}
+						<a href="#" class="btn download-button">Download</a>
+					{% endif %}
+					<a href="/" class="btn go-back-button">Go back</a>
+				</div>
+			</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var downloadButton = document.querySelector('.download-button');
+
+				var checkboxes = document.querySelectorAll('.custom-checkbox');
+				var cards = [];
+
+				downloadButton.addEventListener("click", function(){
+				    event.preventDefault();
+
+				    var text_content = "#separator:tab\n#html:false\n#notetype column:1\n#deck column:2\n#tags column:5";
+
+					for (var i = 0; i < checkboxes.length; i++) {
+						if(checkboxes[i].checked) {
+							text_content += "\nCloze\tmedschoolGPT\t" + checkboxes[i].value + "\t\tmedschoolGPT::{{ topic }}";
+						}
+					}
+
+					var file_content = new Blob([text_content], {type: "text/plain"});
+
+					var download_link = document.createElement("a");
+					download_link.href = URL.createObjectURL(file_content);
+					download_link.download = "cards.txt"
+
+					download_link.click();
+				});
+			});
+		</script>
+	</body>
+</html>
