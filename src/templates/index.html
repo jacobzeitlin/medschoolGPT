@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7928606644657999" crossorigin="anonymous"></script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>medschoolGPT</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
+		<style>
+			body {
+			  background-color: #C0D6E4;
+			}
+			.container {
+			  display: flex;
+			  flex-direction: column;
+			  align-items: center;
+			  margin-top: 5%;
+			}
+			.title {
+			  font-size: 3rem;
+			  font-family: 'Open Sans', sans-serif;
+			  color: #1e90ff;
+			  margin-bottom: 1rem;
+			}
+			.subtitle {
+			  font-size: 1.5rem;
+			  font-family: 'Open Sans', sans-serif;
+			  color: #333;
+			  margin-bottom: 2rem;
+			}
+			.form-control {
+			  background-color: #fff;
+			  border-radius: 10px;
+			  padding: 0.5rem 1rem;
+			  font-size: 1.5rem;
+			  margin-bottom: 1rem;
+			  border: none;
+			}
+			.slider {
+			  width: 80%;
+			}
+			.btn {
+			  background-color: #1e90ff;
+			  color: #fff;
+			  font-size: 1.5rem;
+			  padding: 0.5rem 2rem;
+			  border-radius: 10px;
+			  margin-top: 2rem;
+			  outline: none;
+			  border: none;
+			  cursor: pointer;
+			}
+			.btn:hover {
+			  background-color: #00bfff;
+			}
+			.btn[disabled] {
+				pointer-events: none;
+				opacity: 0.2;
+				background-color: #071240;
+			}
+			.slider-label {
+			  font-size: 1.2rem;
+			  font-family: 'Open Sans', sans-serif;
+			  display: inline-block;
+			  text-align:right;
+			  margin-right: 20px;
+			}
+			#slider-value {
+			  font-size: 1.5rem;
+			  font-family: 'Open Sans', sans-serif;
+			  display: inline-block;
+			  text-align:left;
+			  width: 50px;
+			  margin-left: 20px;
+			}
+			.form-group {
+			    display: flex;
+			    align-items: center;
+			    justify-content: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1 class="title">medschoolGPT</h1>
+			<h2 class="subtitle">AI-generated Anki cards for medical students</h2>
+			<form action="/cards" method="post">
+				<div class="form-group mx-auto">
+					<input type="text" class="form-control" id="topic" name="topic" placeholder="What are you studying?">
+				</div>
+				<div class="form-group mx-auto">
+					<label for="slider" class="slider-label">Number of cards:</label>
+					<input type="text" class="slider" id="slider" data-slider-min="2" data-slider-max="20" data-slider-step="2" data-slider-value="2" value="2" name="num_cards">
+					   <span id="slider-value"></span>
+				</div>
+				<div class="form-group mx-auto">
+					{% if limit_user == "no" %}
+						<button class="btn" type="submit">Create cards</button>
+					{% else %}
+						<button class="btn" type="submit" disabled>Hourly rate limit exceeded</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
+		<script>
+			var slider = new Slider("#slider", {
+				formatter: function(value) {
+					return;
+				}
+			});
+
+			$("#slider-value").text("2");
+
+			$("#slider").on("slide", function(slideEvt) {
+				$("#slider-value").text(slideEvt.value);
+			});
+		</script>
+	</body>
+</html>
