@@ -1,52 +1,28 @@
-import jwt
 import openai
-import os
-import secrets
-import time
 
-from dotenv import load_dotenv
-from flask import Flask, make_response, render_template, request
+from flask import Flask, make_response, redirect, render_template, request
 
 app = Flask(__name__)
 
-project_folder = os.path.expanduser("~/medschoolGPT")
-load_dotenv(os.path.join(project_folder, ".env"))
-openai.api_key = os.getenv("OPENAI_API_KEY")
-secret = os.getenv("SECRET_KEY")
-
 @app.route("/")
 def index():
-	jwt_token = request.cookies.get("jwt")
-	response = make_response(render_template("index.html", limit_user = "no"))
-	requests = 0
-
-	if jwt_token is None:
-		token = secrets.token_hex(16)
-		payload = {"token": token, "exp": int(time.time()) + 3600}
-		jwt_token = jwt.encode(payload, secret, algorithm = "HS256")
-		requests = 0
-		response.set_cookie("jwt", jwt_token)
-		response.set_cookie("requests", "0")
-	else:
-		try:
-			jwt_token = jwt.decode(jwt_token, secret, algorithms = ["HS256"])
-			requests = int(request.cookies.get("requests") or 0)
-		except jwt.exceptions.ExpiredSignatureError:
-			token = secrets.token_hex(16)
-			payload = {"token": token, "exp": int(time.time()) + 3600}
-			jwt_token = jwt.encode(payload, secret, algorithm = "HS256")
-			requests = 0
-			response.set_cookie("jwt", jwt_token)
-			response.set_cookie("requests", "0")
-
-	if requests > 60:
-		response = make_response(render_template("index.html", limit_user = "yes"))
-
+	limitation = request.cookies.get("limit_user") or "no"
+	response = make_response(render_template("index.html", limit_user = limitation))
+	response.set_cookie("limit_user", "no")
 	return response
 
 @app.route("/cards", methods = ["GET", "POST"])
 def cards():
-	requests = int(request.cookies.get("requests"))
+	openai.api_key = request.form["api_key"]
+
+	try:
+	    models = openai.Model.list()
+	    print(models)
+	except (openai.error.AuthenticationError, openai.error.RateLimitError):
+	    response = redirect("/", 302)
+	    response.set_cookie("limit_user", "yes")
+	    return response
+
 	topic = request.form["topic"]
 	num_cards = int(request.form["num_cards"])
 	all_cards = []
@@ -61,8 +37,7 @@ def cards():
 			topic = "[no topic]"
 
 	response = make_response(render_template("cards.html", topic = topic, num_cards = num_cards, all_cards = all_cards))
-
-	response.set_cookie("requests", str(requests + num_cards))
+	response.set_cookie("limit_user", "no")
 
 	return response
 
@@ -80,6 +55,7 @@ def is_medical(topic):
 
 	prompt = examples + "Is [" + topic.lower() + "] related to medicine?"
 	response = openai.Completion.create(model = "text-davinci-003", prompt = prompt, temperature = 0, max_tokens = 4)
+
 	medical_topic = response.choices[0].text.strip()
 
 	if medical_topic == "yes":
