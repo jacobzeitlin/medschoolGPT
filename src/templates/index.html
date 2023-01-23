@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-	    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7928606644657999" crossorigin="anonymous"></script>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>medschoolGPT</title>
@@ -36,6 +35,24 @@
 			  margin-bottom: 1rem;
 			  border: none;
 			}
+			.form-control-key {
+			  background-color: #fff;
+			  border-radius: 10px;
+			  padding: 0.5rem 1rem;
+			  font-size: 0.8rem;
+			  margin-bottom: 1rem;
+			  border: none;
+			  width: 240px;
+			}
+			.form-control-key-red {
+			  background-color: #fff;
+			  border-radius: 10px;
+			  padding: 0.5rem 1rem;
+			  font-size: 0.8rem;
+			  margin-bottom: 1rem;
+			  border: solid red;
+			  width: 240px;
+			}
 			.slider {
 			  width: 80%;
 			}
@@ -52,11 +69,6 @@
 			}
 			.btn:hover {
 			  background-color: #00bfff;
-			}
-			.btn[disabled] {
-				pointer-events: none;
-				opacity: 0.2;
-				background-color: #071240;
 			}
 			.slider-label {
 			  font-size: 1.2rem;
@@ -85,8 +97,13 @@
 			<h1 class="title">medschoolGPT</h1>
 			<h2 class="subtitle">AI-generated Anki cards for medical students</h2>
 			<form action="/cards" method="post">
-				<div class="form-group mx-auto">
-					<input type="text" class="form-control" id="topic" name="topic" placeholder="What are you studying?">
+				<div class="form-group mx-auto" style="flex-direction: column;">
+				    {% if limit_user == "no" %}
+				        <input type="text" class="form-control-key" id="api_key" name="api_key" placeholder="OpenAI API key (sk-...)">
+				    {% else %}
+				        <input type="text" class="form-control-key-red" id="api_key" name="api_key" placeholder="OpenAI API key (sk-...)">
+				    {% endif %}
+				    <input type="text" class="form-control" id="topic" name="topic" placeholder="What are you studying?">
 				</div>
 				<div class="form-group mx-auto">
 					<label for="slider" class="slider-label">Number of cards:</label>
@@ -94,11 +111,7 @@
 					   <span id="slider-value"></span>
 				</div>
 				<div class="form-group mx-auto">
-					{% if limit_user == "no" %}
-						<button class="btn" type="submit">Create cards</button>
-					{% else %}
-						<button class="btn" type="submit" disabled>Hourly rate limit exceeded</button>
-					{% endif %}
+				    <button class="btn" type="submit">Create cards</button>
 				</div>
 			</form>
 		</div>
