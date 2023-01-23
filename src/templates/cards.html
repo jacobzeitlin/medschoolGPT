@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-	    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7928606644657999" crossorigin="anonymous"></script>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>medschoolGPT</title>
@@ -55,6 +54,8 @@
 			.card-text {
 				font-size: 1.4rem;
 				font-family: 'Open Sans', sans-serif;
+				max-width: 72vw;
+				text-align: center;
 			}
 			.card-text kbd {
 				padding: 0.2rem 0.4rem;
@@ -167,11 +168,11 @@
 				downloadButton.addEventListener("click", function(){
 				    event.preventDefault();
 
-				    var text_content = "#separator:tab\n#html:false\n#notetype column:1\n#deck column:2\n#tags column:5";
+				    var text_content = "#separator:tab\n#html:false\n#notetype column:1\n#deck column:2\n#tags:medschoolGPT::" + "{{ topic }}".replace(/ /g, "_").replace(/&amp;/, "&");
 
 					for (var i = 0; i < checkboxes.length; i++) {
 						if(checkboxes[i].checked) {
-							text_content += "\nCloze\tmedschoolGPT\t" + checkboxes[i].value + "\t\tmedschoolGPT::{{ topic }}";
+							text_content += "\nCloze\tmedschoolGPT\t" + checkboxes[i].value;
 						}
 					}
 
